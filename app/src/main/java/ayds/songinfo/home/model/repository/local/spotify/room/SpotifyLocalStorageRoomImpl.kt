@@ -48,7 +48,7 @@ internal class SpotifyLocalStorageRoomImpl(
         this.artistName,
         this.albumName,
         this.releaseDate,
-        this.releaseDatePresicion,
+        this.releaseDatePrecision,
         this.spotifyUrl,
         this.imageUrl
     )
