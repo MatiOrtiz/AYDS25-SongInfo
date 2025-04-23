@@ -2,6 +2,8 @@ package ayds.songinfo.home.model
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import ayds.songinfo.home.model.repository.SongRepository
 import ayds.songinfo.home.model.repository.SongRepositoryImpl
 import ayds.songinfo.home.model.repository.external.spotify.SpotifyInjector
@@ -17,11 +19,22 @@ object HomeModelInjector {
 
     fun getHomeModel(): HomeModel = homeModel
 
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "ALTER TABLE SongEntity ADD COLUMN release_date_precision TEXT NOT NULL DEFAULT ''"
+            )
+        }
+    }
+
+
     fun initHomeModel(homeView: HomeView) {
         val dataBase = Room.databaseBuilder(
             homeView as Context,
             SongDatabase::class.java, "song-database"
-        ).build()
+        ).addMigrations(MIGRATION_1_2)
+            .build()
+
 
         val spotifyLocalRoomStorage: SpotifyLocalStorage = SpotifyLocalStorageRoomImpl(dataBase)
 
