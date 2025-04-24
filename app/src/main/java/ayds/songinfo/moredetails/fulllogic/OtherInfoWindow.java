@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.room.Room;
 
 import ayds.songinfo.R;
@@ -34,8 +33,6 @@ public class OtherInfoWindow extends Activity {
   public final static String ARTIST_NAME_EXTRA = "artistName";
 
   private TextView textPane1;
-  //private JPanel imagePanel;
- // private JLabel posterImageLabel;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
