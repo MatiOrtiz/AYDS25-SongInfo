@@ -22,4 +22,27 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
             else -> "Song not found"
         }
     }
+
+    private fun spotifySong.releaseDate() =
+        when (this.releaseDatePrecision){
+            "day" -> {
+                val year = this.releaseDate.split("-").first()
+                val month = this.releaseDate.split("-")[1]
+                val day = this.releaseDate.split("-")[2]
+                "$day/$month/$year"
+            }
+            "month" -> {
+                val year = this.releaseDate.split("-").first()
+                val month = this.releaseDate.split("-")[1]
+                "${month.toInt().toMonthString()},$year"
+            }
+            "year" -> {
+                val isLeapYear = isLeapYear(this.releaseDate.toInt())
+                "${this.releaseDate}${if (isLeapYear) "(leap year)" else "(not a leap year)"}"
+            }
+            else -> ""
+        }
+
+    private
 }
+
