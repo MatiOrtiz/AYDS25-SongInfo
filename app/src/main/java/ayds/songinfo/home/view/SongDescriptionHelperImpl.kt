@@ -23,7 +23,7 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
         }
     }
 
-    private fun spotifySong.releaseDate() =
+    private fun SpotifySong.releaseDate() =
         when (this.releaseDatePrecision){
             "day" -> {
                 val year = this.releaseDate.split("-").first()
@@ -43,6 +43,23 @@ internal class SongDescriptionHelperImpl : SongDescriptionHelper {
             else -> ""
         }
 
-    private
+    private fun Int.toMonthString() =
+        when(this){
+            1 -> "January"
+            2 -> "February"
+            3 -> "March"
+            4 -> "April"
+            5 -> "May"
+            6 -> "June"
+            7 -> "July"
+            8 -> "August"
+            9 -> "September"
+            10 -> "October"
+            11 -> "November"
+            12 -> "December"
+            else -> ""
+        }
+
+    private fun isLeapYear(n:Int) = (n%4==0) && (n%100!=0 || n%400==0)
 }
 
