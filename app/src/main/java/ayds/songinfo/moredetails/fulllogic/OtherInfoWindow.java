@@ -32,7 +32,10 @@ public class OtherInfoWindow extends Activity {
 
   public final static String ARTIST_NAME_EXTRA = "artistName";
 
-  private TextView textPane1;
+  private TextView artistBioTextView;
+  private ArticleDatabase dataBase = null;
+  private LastFMAPI lastFMAPI;
+
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,21 +43,28 @@ public class OtherInfoWindow extends Activity {
 
     setContentView(R.layout.activity_other_info);
 
-    textPane1 = findViewById(R.id.textPane1);
+    artistBioTextView = findViewById(R.id.textPane1);
+    initDB();
+    initLastFMApi();
 
 
-    open(getIntent().getStringExtra("artistName"));
+    loadArtistInfo(getIntent().getStringExtra("artistName"));
   }
 
-  public void getARtistInfo(String artistName) {
+  private void initDB(){
+    dataBase =    Room.databaseBuilder(this, ArticleDatabase.class, "database-name-thename").build();
+  }
 
-    // create
+  private void initLastFMApi(){
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://ws.audioscrobbler.com/2.0/")
             .addConverterFactory(ScalarsConverterFactory.create())
             .build();
 
-    LastFMAPI lastFMAPI = retrofit.create(LastFMAPI.class);
+    lastFMAPI = retrofit.create(LastFMAPI.class);
+  }
+
+  public void getArtistInfo(String artistName) {
 
     Log.e("TAG","artistName " + artistName);
 
@@ -73,14 +83,7 @@ public class OtherInfoWindow extends Activity {
               text = "[*]" + article.getBiography();
 
               final String urlString = article.getArticleUrl();
-              findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                  Intent intent = new Intent(Intent.ACTION_VIEW);
-                  intent.setData(Uri.parse(urlString));
-                  startActivity(intent);
-                }
-              });
+              setOpenUrlButton(urlString);
 
             } else { // get from service
               Response<String> callResponse;
@@ -120,14 +123,7 @@ public class OtherInfoWindow extends Activity {
 
 
                 final String urlString = url.getAsString();
-                findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
-                  @Override
-                  public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(urlString));
-                    startActivity(intent);
-                  }
-                });
+                setOpenUrlButton(urlString);
 
               } catch (IOException e1) {
                 Log.e("TAG", "Error " + e1);
@@ -136,36 +132,37 @@ public class OtherInfoWindow extends Activity {
             }
 
 
-            String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png";
-
-            Log.e("TAG","Get Image from " + imageUrl);
-
-
-
             final String finalText = text;
-
-            runOnUiThread( () -> {
-              Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView1));
-
-
-              textPane1.setText(Html.fromHtml( finalText));
-
-
-            });
-
-
+            loadImage();
+            showError(finalText);
 
           }
         }).start();
 
   }
 
-  private ArticleDatabase dataBase = null;
+  private void setOpenUrlButton(String urlString) {
+    findViewById(R.id.openUrlButton1).setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(urlString));
+        startActivity(intent);
+      }
+    });
+  }
 
-  private void open(String artist) {
+  private void loadImage(){
+    String imageUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png";
+    Log.e("TAG","Get Image from " + imageUrl);
+    Picasso.get().load(imageUrl).into((ImageView) findViewById(R.id.imageView1));
+  }
 
+  private void showError(String finalText){
+    artistBioTextView.setText(Html.fromHtml( finalText));
+  }
 
-    dataBase =    Room.databaseBuilder(this, ArticleDatabase.class, "database-name-thename").build();
+  private void loadArtistInfo(String artist) {
 
     new Thread(new Runnable() {
       @Override
@@ -178,7 +175,7 @@ public class OtherInfoWindow extends Activity {
     }).start();
 
 
-    getARtistInfo(artist);
+    getArtistInfo(artist);
   }
 
   public static String textToHtml(String text, String term) {
