@@ -21,11 +21,11 @@ import java.util.Locale
 data class ArtistBiography(val artistName:String, val biography:String, val articleUrl:String)
 
 class OtherInfoWindow : Activity() {
-    private var artistBioTextView: TextView? = null
-    private var openUrlButton: Button? = null
-    private var lastFMImageView: ImageView? = null
-    private var dataBase: ArticleDatabase? = null
-    private var lastFMAPI: LastFMAPI? = null
+    private lateinit var artistBioTextView: TextView
+    private lateinit var openUrlButton: Button
+    private lateinit var lastFMImageView: ImageView
+    private lateinit var dataBase: ArticleDatabase
+    private lateinit var lastFMAPI: LastFMAPI
 
     private lateinit var articleDatabase: ArticleDatabase
 
@@ -78,28 +78,9 @@ class OtherInfoWindow : Activity() {
         }.start()
     }
 
-    fun getArtistInfo() {
+    private fun getArtistInfo() {
         val artistBiography = getArtistInfoFromRepository()
-        var text = ""
-        val finalText = text
-        loadImage()
-        showError(finalText)
-    }
-
-    private fun getArtistFromExternalData(serviceData:String?, artistName: String): ArtistBiography{
-        val gson = Gson()
-        val jobj = gson.fromJson(
-            serviceData,
-            JsonObject::class.java
-        )
-        val artist = jobj["artist"].asJsonObject
-        val bio = artist["bio"].asJsonObject
-        val extract = bio["content"]
-        val url = artist["url"]
-
-        val text = extract?.asString?: "No Results"
-
-        return ArtistBiography(artistName, text, url.asString)
+        updateUI(artistBiography)
     }
 
     private fun getArtistInfoFromRepository():ArtistBiography{
@@ -119,6 +100,22 @@ class OtherInfoWindow : Activity() {
     }
 
     private fun ArtistBiography.markItAsLocal() = copy(biography = "[*]$biography")
+
+    private fun getArtistFromExternalData(serviceData:String?, artistName: String): ArtistBiography{
+        val gson = Gson()
+        val jobj = gson.fromJson(
+            serviceData,
+            JsonObject::class.java
+        )
+        val artist = jobj["artist"].asJsonObject
+        val bio = artist["bio"].asJsonObject
+        val extract = bio["content"]
+        val url = artist["url"]
+
+        val text = extract?.asString?: "No Results"
+
+        return ArtistBiography(artistName, text, url.asString)
+    }
 
     private fun getArticleFromDB(artistName:String): ArtistBiography? {
         val artistEntity = articleDatabase.ArticleDao().getArticleByArtistName(artistName)
@@ -143,8 +140,6 @@ class OtherInfoWindow : Activity() {
     private fun getSongFromService(artistName: String) =
         lastFMAPI!!.getArtistInfo(artistName).execute()
 
-
-
     private fun insertArtistToDB(artistBiography: ArtistBiography) {
         Thread {
             dataBase!!.ArticleDao()
@@ -152,26 +147,35 @@ class OtherInfoWindow : Activity() {
         }.start()
     }
 
-    private fun setOpenUrlButton(urlString: String) {
+    private fun getArtistName() =
+        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+
+    private fun updateUI(artistBiography:ArtistBiography){
+        runOnUiThread{
+            updateOpenUrlButton(artistBiography)
+            loadLastFMImage()
+            updateArticleText(artistBiography)
+        }
+    }
+
+    private fun updateOpenUrlButton(artistBiography: ArtistBiography) {
         openUrlButton!!.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse(urlString))
+            intent.setData(Uri.parse(artistBiography.articleUrl))
             startActivity(intent)
         }
     }
 
-    private fun getArtistName() =
-        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
-
-    private fun loadImage() {
+    private fun loadLastFMImage() {
         val imageUrl =
             "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Lastfm_logo.svg/320px-Lastfm_logo.svg.png"
         Log.e("TAG", "Get Image from $imageUrl")
         Picasso.get().load(imageUrl).into(lastFMImageView)
     }
 
-    private fun showError(finalText: String) {
-        artistBioTextView!!.text = Html.fromHtml(finalText)
+    private fun updateArticleText(artistBiography: ArtistBiography) {
+        val text = artistBiography.biography.replace("\\n", "\n")
+        artistBioTextView.text = Html.fromHtml(textToHtml(text, artistBiography.artistName))
     }
 
 
