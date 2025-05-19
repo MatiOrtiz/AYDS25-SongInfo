@@ -6,7 +6,7 @@ import ayds.songinfo.moredetails.fulllogic.view.OtherInfoView
 import ayds.songinfo.moredetails.fulllogic.model.repository.OtherInfoRepository
 
 class OtherInfoPresenter {
-
+    //TODO: Add dependency injection
     fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
