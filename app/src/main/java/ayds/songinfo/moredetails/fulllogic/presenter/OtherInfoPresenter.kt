@@ -1,23 +1,24 @@
 package ayds.songinfo.moredetails.fulllogic.presenter
 
-import android.os.Bundle
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.view.OtherInfoView
 import ayds.songinfo.moredetails.fulllogic.model.repository.OtherInfoRepository
 
-class OtherInfoPresenter {
-    //TODO: Add dependency injection
-    fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+class OtherInfoPresenter(private val view: OtherInfoView,
+                         private val repository: OtherInfoRepository) {
 
-        setContentView(R.layout.activity_other_info)
+    fun onCreate() {
+        val artistName = view.getArtistName()
 
-        initViewProperties()
-        initDB()
-        initLastFMApi()
-        initArticleDatabase()
-        getArtistInfoAsync()
+        view.setContentView(R.layout.activity_other_info)
 
+        view.initViewProperties()
+        repository.initDB(view.context)
+        repository.initLastFMApi()
+        repository.initArticleDatabase(view.context)
+        repository.getArtistInfoAsync(artistName) {artistBiography ->
+            view.updateUI(artistBiography)
+        }
     }
 
 }

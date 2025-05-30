@@ -1,5 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.model.repository
 
+import android.content.Context
 import androidx.room.Room.databaseBuilder
 import ayds.songinfo.moredetails.fulllogic.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.ArticleEntity
@@ -16,9 +17,9 @@ class OtherInfoRepositoryImpl : OtherInfoRepository {
     private lateinit var lastFMAPI: LastFMAPI
     private lateinit var articleDatabase: ArticleDatabase
 
-    override fun initDB() {
+    override fun initDB(context: Context) {
         dataBase = databaseBuilder(
-            this,
+            context,
             ArticleDatabase::class.java, "database-name-thename"
         ).build()
     }
@@ -32,26 +33,21 @@ class OtherInfoRepositoryImpl : OtherInfoRepository {
         lastFMAPI = retrofit.create(LastFMAPI::class.java)
     }
 
-    override fun initArticleDatabase() {
+    override fun initArticleDatabase(context: Context) {
         articleDatabase = databaseBuilder(
-            this,
+            context,
             ArticleDatabase::class.java, "article-database"
         ).build()
     }
 
-    override fun getArtistInfoAsync(){
-        Thread{
-            getArtistInfo()
+    override fun getArtistInfoAsync(artistName: String, callback: (ArtistBiography) -> Unit) {
+        Thread {
+            val artistBiography = getArtistInfoFromRepository(artistName)
+            callback(artistBiography)
         }.start()
     }
 
-    private fun getArtistInfo() {
-        val artistBiography = getArtistInfoFromRepository()
-        updateUI(artistBiography)
-    }
-
-    private fun getArtistInfoFromRepository(): ArtistBiography {
-        val artistName = getArtistName()
+    private fun getArtistInfoFromRepository(artistName: String): ArtistBiography {
         val dbArticle = getArticleFromDB(artistName)
         val artistBiography : ArtistBiography
 
@@ -114,7 +110,6 @@ class OtherInfoRepositoryImpl : OtherInfoRepository {
         }.start()
     }
 
-    private fun getArtistName() =
-        intent.getStringExtra(ARTIST_NAME_EXTRA) ?: throw Exception("Missing artist name")
+
 
 }
