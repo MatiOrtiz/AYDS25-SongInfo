@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.view
+package ayds.songinfo.moredetails.fulllogic.presentation
 
 import android.app.Activity
 import android.content.Context
@@ -11,20 +11,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.ArtistBiography
-import ayds.songinfo.moredetails.fulllogic.Injector
+import ayds.songinfo.moredetails.fulllogic.injector.OtherInfoInjector
 import ayds.songinfo.moredetails.fulllogic.OtherInfoWindow
-import ayds.songinfo.moredetails.fulllogic.OtherInfoWindow.Companion
-import ayds.songinfo.moredetails.fulllogic.OtherInfoWindow.Companion.textToHtml
 import com.squareup.picasso.Picasso
 import java.util.Locale
 
-class OtherInfoView : Activity() {
+class OtherInfoActivity : Activity() {
 
     private lateinit var artistBioTextView: TextView
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
 
-    val presenter = Injector.provideOtherInfoPresenter()
+    val presenter = OtherInfoInjector.provideOtherInfoPresenter()
 
     val context: Context
         get() = this

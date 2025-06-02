@@ -1,11 +1,11 @@
-package ayds.songinfo.moredetails.fulllogic.presenter
+package ayds.songinfo.moredetails.fulllogic.presentation
 
 import ayds.songinfo.R
-import ayds.songinfo.moredetails.fulllogic.view.OtherInfoView
-import ayds.songinfo.moredetails.fulllogic.model.repository.OtherInfoRepository
+import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 
-class OtherInfoPresenter(private val view: OtherInfoView,
-                         private val repository: OtherInfoRepository) {
+class OtherInfoPresenter(private val view: OtherInfoActivity,
+                         private val repository: OtherInfoRepository
+) {
 
     fun onCreate() {
         val artistName = view.getArtistName()

@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository
+package ayds.songinfo.moredetails.fulllogic.domain
 
 import android.content.Context
 import ayds.songinfo.moredetails.fulllogic.ArtistBiography

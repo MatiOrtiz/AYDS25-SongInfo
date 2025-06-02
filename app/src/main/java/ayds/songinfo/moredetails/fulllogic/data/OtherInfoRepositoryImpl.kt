@@ -1,4 +1,4 @@
-package ayds.songinfo.moredetails.fulllogic.model.repository
+package ayds.songinfo.moredetails.fulllogic.data
 
 import android.content.Context
 import androidx.room.Room.databaseBuilder
@@ -6,7 +6,7 @@ import ayds.songinfo.moredetails.fulllogic.ArticleDatabase
 import ayds.songinfo.moredetails.fulllogic.ArticleEntity
 import ayds.songinfo.moredetails.fulllogic.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.LastFMAPI
-import ayds.songinfo.moredetails.fulllogic.OtherInfoWindow.Companion.ARTIST_NAME_EXTRA
+import ayds.songinfo.moredetails.fulllogic.domain.OtherInfoRepository
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import retrofit2.Retrofit
