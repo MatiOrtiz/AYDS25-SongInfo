@@ -1,7 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.presentation
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.Html
@@ -12,6 +11,7 @@ import android.widget.TextView
 import ayds.songinfo.R
 import ayds.songinfo.moredetails.fulllogic.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.injector.OtherInfoInjector
+import ayds.songinfo.moredetails.fulllogic.presentation.OtherInfoPresenter
 import ayds.songinfo.moredetails.fulllogic.OtherInfoWindow
 import com.squareup.picasso.Picasso
 import java.util.Locale
@@ -22,15 +22,33 @@ class OtherInfoActivity : Activity() {
     private lateinit var openUrlButton: Button
     private lateinit var lastFMImageView: ImageView
 
-    val presenter = OtherInfoInjector.provideOtherInfoPresenter()
+    private lateinit var presenter = OtherInfoPresenter
 
-    val context: Context
-        get() = this
 
-    fun initViewProperties() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_other_info)
+
+        initViewProperties()
+        initPresenter()
+
+        observePresenter()
+        getArtistInfoAsync()
+    }
+
+    private fun initViewProperties() {
         artistBioTextView = findViewById(R.id.textPane1)
         openUrlButton = findViewById(R.id.openUrlButton1)
         lastFMImageView = findViewById(R.id.imageView1)
+    }
+
+    private fun initPresenter(){
+        OtherInfoInjector.initGraph(this)
+        presenter = OtherInfoInjector.presenter
+    }
+
+    private fun observePresenter(){
+
     }
 
     fun updateUI(artistBiography: ArtistBiography) {
