@@ -44,9 +44,13 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.picasso)
     implementation(libs.androidx.room)
+    implementation(libs.mockk)
+    testImplementation("junit:junit:4.13.2")
 
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(kotlin("test"))
+
 }
