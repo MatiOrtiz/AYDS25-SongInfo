@@ -10,7 +10,7 @@ interface ArtistBiographyDescriptionHelper{
 private const val  HEADER = "<html><div width=400>"
 private const val FOOTER = "</div></html>"
 
-internal class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescriptionHelper{
+class ArtistBiographyDescriptionHelperImpl : ArtistBiographyDescriptionHelper{
     override fun getDescription(artistBiography: ArtistBiography): String {
         val text = getTextBiography(artistBiography)
         return textToHtml(text, artistBiography.artistName)
