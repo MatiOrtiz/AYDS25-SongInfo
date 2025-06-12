@@ -3,7 +3,7 @@ package ayds.songinfo.moredetails.fulllogic.data
 import android.content.Context
 import androidx.room.Room.databaseBuilder
 import ayds.songinfo.moredetails.fulllogic.data.local.ArticleDatabase
-import ayds.songinfo.moredetails.fulllogic.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 import ayds.songinfo.moredetails.fulllogic.data.external.LastFMAPI
 import ayds.songinfo.moredetails.fulllogic.data.external.OtherInfoService
 import ayds.songinfo.moredetails.fulllogic.data.local.OtherInfoLocalStorage

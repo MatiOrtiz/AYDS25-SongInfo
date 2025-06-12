@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data.external
 
-import ayds.songinfo.moredetails.fulllogic.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 

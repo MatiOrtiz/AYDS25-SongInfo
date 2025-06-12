@@ -1,6 +1,6 @@
 package ayds.songinfo.moredetails.fulllogic.data.local
 
-import ayds.songinfo.moredetails.fulllogic.ArtistBiography
+import ayds.songinfo.moredetails.fulllogic.domain.ArtistBiography
 
 interface OtherInfoLocalStorage{
 

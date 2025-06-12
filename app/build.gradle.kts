@@ -45,7 +45,6 @@ dependencies {
     implementation(libs.picasso)
     implementation(libs.androidx.room)
     implementation(libs.mockk)
-    testImplementation("junit:junit:4.13.2")
 
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
